@@ -1,2 +1,2 @@
 # epidemic-observatory
-Epidemiological prediction based on real time data surveillance
+Epidemiological surveillance based on real time online data
