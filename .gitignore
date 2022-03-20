@@ -1,5 +1,5 @@
-credentials.*
-data.txt
+credentials*.*
+data*.*
 rawdata.txt
 
 # Byte-compiled / optimized / DLL files
