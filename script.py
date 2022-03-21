@@ -35,18 +35,32 @@ class MyStream(tweepy.Stream):
             #returning False in on_data disconnects the stream
             return False
 
-# Initialize instance of the subclass
-my_stream = MyStream(
-  credentials_twitter.CONSUMER_KEY,
-  credentials_twitter.CONSUMER_SECRET,
-  credentials_twitter.ACCESS_TOKEN,
-  credentials_twitter.ACCESS_TOKEN_SECRET
-)
+def main():
+    # Initialize instance of the subclass
+    my_stream = MyStream(
+      credentials_twitter.CONSUMER_KEY,
+      credentials_twitter.CONSUMER_SECRET,
+      credentials_twitter.ACCESS_TOKEN,
+      credentials_twitter.ACCESS_TOKEN_SECRET
+    )
 
-# Begin collecting data
-print("call filter")
-my_stream.filter(track = keywords_to_track)
-print("after filter")
+    # Begin collecting data
+    print("call filter")
+    global collection_id
+    collection_id = storage.createCollection();
+    print("tweet collection id %d" % collection_id)
+    my_stream.filter(track = keywords_to_track)
+    print("after filter")
 
-# v2 api example
-# client = tweepy.Client(bearer_token=credentials.BEARER_TOKEN)
+    # v2 api example
+    # client = tweepy.Client(bearer_token=credentials.BEARER_TOKEN)
+
+if __name__=='__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("kbd interrupt")
+        storage.finishCollection(collection_id)
+        print("finished collection id %d" % collection_id)
+    except SystemExit:
+        print("system exit")

@@ -16,4 +16,9 @@ recset = mycursor.fetchall()
 for rec in recset:
     print (rec)
 
+sql = ("update tweet_collection set finished =  "
+        " CURRENT_TIMESTAMP where id = %s")
+val=(1,)
+mycursor.execute(sql, val)
+
 connection.commit()

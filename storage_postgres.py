@@ -22,6 +22,21 @@ def createPlace(place):
     val = (place.id, place.url, place.place_type, place.name,
             place.full_name, place.country, place.country_code)
     mycursor.execute(sql, val)
+    mydb.commit
+
+def createCollection():
+    sql = ("insert into tweet_collection (started) "
+            " values (CURRENT_TIMESTAMP) returning id")
+    mycursor.execute(sql)
+    id = mycursor.fetchone()
+    mydb.commit()
+    return id
+
+def finishCollection(id):
+    sql = ("update tweet_collection set finished =  "
+            " CURRENT_TIMESTAMP where id = %s")
+    val = (id,)
+    mycursor.execute(sql, val)
     mydb.commit()
 
 def save(tweet):
