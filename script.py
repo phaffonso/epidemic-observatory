@@ -15,7 +15,8 @@ class MyStream(tweepy.Stream):
     def on_status(self, status):
         #print('##STATUS')
         #if(status.place != None or status.geo != None):
-        storage.save(status)
+        global collection_id
+        storage.save(status, collection_id)
             # with open('rawdata.txt', 'a', encoding="utf-8") as file:
             #     file.write('\r\n>>>')
             #     file.write(str(status))
