@@ -16,9 +16,17 @@ recset = mycursor.fetchall()
 for rec in recset:
     print (rec)
 
-sql = ("update tweet_collection set finished =  "
-        " CURRENT_TIMESTAMP where id = %s")
-val=(1,)
+def point2str(point):
+    return '(%.6f,%.6f)' % (point[0], point[1])
+
+def coords2str(coords):
+    points = tuple(map(point2str, coords[0]))
+    return "(%s,%s,%s,%s)" % (points)
+
+
+
+sql = ("insert into place (id, bounding_box) values (%s,%s)")
+val=('abcd', coords2str(coords))
 mycursor.execute(sql, val)
 
 connection.commit()

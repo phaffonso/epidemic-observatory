@@ -9,7 +9,6 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-coords = [[[-43.416139, -22.813278], [-43.416139, -22.475838], [-43.177605, -22.475838], [-43.177605, -22.813278]]]
 
 def point2str(point):
     return '%.6f %.6f' % (point[0], point[1])
@@ -19,6 +18,7 @@ def coords2str(coords):
     cstring = '((%s, %s, %s, %s))' % tuple(points)
     return 'POLYGON(%s)' % cstring
 
+coords = [[[-43.416139, -22.813278], [-43.416139, -22.475838], [-43.177605, -22.475838], [-43.177605, -22.813278]]]
 print(coords2str(coords))
 
 sql = 'insert into place (id, bounding_box) values (%s, ST_GeomFromText(%s))'

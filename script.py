@@ -30,6 +30,15 @@ class MyStream(tweepy.Stream):
         print("closed")
         sys.stdout.flush()
 
+    def on_closed(self):
+        print("error: closed")
+
+    def on_connection_error(self):
+        print("error: connection err")
+
+    def on_request_error(self):
+        print("error: request err")
+
     def on_error(self, status_code):
         print("error::"+status_code)
         if status_code == 420:
@@ -48,7 +57,7 @@ def main():
     # Begin collecting data
     print("call filter")
     global collection_id
-    collection_id = storage.createCollection();
+    collection_id = storage.createCollection(keywords_to_track);
     print("tweet collection id %d" % collection_id)
     my_stream.filter(track = keywords_to_track)
     print("after filter")
