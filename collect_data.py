@@ -4,6 +4,11 @@ import credentials_db
 import sys
 import storage_postgres as storage
 
+import credentials_geo
+import googlemaps
+
+gmaps = googlemaps.Client(key=credentials_geo.API_KEY)
+
 # api = tweepy.API(credentials.BEARER_TOKEN)
 
 # Set up words to track
@@ -17,6 +22,14 @@ class MyStream(tweepy.Stream):
         #if(status.place != None or status.geo != None):
         global collection_id
         storage.save(status, collection_id)
+        loc = status.user.location
+        if(loc is not None):
+            print("location: "+loc)
+            if(storage.getGeocoded(loc) is None):
+                print("geocoding: ")
+                geocode_result = gmaps.geocode(loc)
+                print(geocode_result)
+                storage.saveGeocoded(loc, geocode_result)
             # with open('rawdata.txt', 'a', encoding="utf-8") as file:
             #     file.write('\r\n>>>')
             #     file.write(str(status))

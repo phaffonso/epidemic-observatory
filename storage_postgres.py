@@ -98,7 +98,7 @@ def save(tweet, collection_id):
 
     mycursor.execute(sql, val)
     mydb.commit()
-    print(mycursor.rowcount, "record inserted.")
+    print(mycursor.rowcount, "tweet saved")
 
 #coords = [[[-43.416139, -22.813278], [-43.416139, -22.475838], [-43.177605, -22.475838], [-43.177605, -22.813278]]]
 #print(coords2str(coords))
