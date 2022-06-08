@@ -12,8 +12,8 @@ gmaps = googlemaps.Client(key=credentials_geo.API_KEY)
 # api = tweepy.API(credentials.BEARER_TOKEN)
 
 # Set up words to track
-keywords_to_track = ['febre, tosse, gripe']
-
+# keywords_to_track = ['febre, tosse, gripe']
+keywords_to_track = ['febre, fever, fieber, fièvre, fiebre, حُمى, 发烧, 發燒, 熱, बुखार, netsu']
 # Subclass Stream to print IDs of Tweets received
 class MyStream(tweepy.Stream):
 
@@ -27,9 +27,12 @@ class MyStream(tweepy.Stream):
             print("location: "+loc)
             if(storage.getGeocoded(loc) is None):
                 print("geocoding: ")
-                geocode_result = gmaps.geocode(loc)
-                print(geocode_result)
-                storage.saveGeocoded(loc, geocode_result)
+                try:
+                    geocode_result = gmaps.geocode(loc)
+                    print(geocode_result)
+                    storage.saveGeocoded(loc, geocode_result)
+                except:
+                    print("An error occured while trying to geocode")
             # with open('rawdata.txt', 'a', encoding="utf-8") as file:
             #     file.write('\r\n>>>')
             #     file.write(str(status))
