@@ -1,3 +1,8 @@
+# Script que coleta dados (tweets) de rede social (Tweeter) relacionados a
+# uma lista de palavras-chave de interesse especificadas e salva em banco de
+# dados (padrão: PostgreSQL). Também pode realizar geocoding da localização do usuário
+# usando API Google Maps, quando configurado para tal
+
 import tweepy
 import credentials_twitter
 import credentials_db
@@ -9,23 +14,27 @@ import googlemaps
 
 gmaps = googlemaps.Client(key=credentials_geo.API_KEY)
 
-# api = tweepy.API(credentials.BEARER_TOKEN)
-
-# Set up words to track
+########### PARÂMETROS AJUSTÁVEIS ############
+# Palavras-chave de interesse na rede social
 # keywords_to_track = ['febre, tosse, gripe']
 keywords_to_track = ['febre, fever, fieber, fièvre, fiebre, حُمى, 发烧, 發燒, 熱, बुखार, netsu']
-# Subclass Stream to print IDs of Tweets received
+# Fazer ou não geocoding da localização de usuários - consome créditos do google maps API
+# cujo custo pode varias entre 100-1000 reais por dia (alguns centavos por chamada)
+use_geocoding = True
+
 class MyStream(tweepy.Stream):
+
+    def __init__(self, ck, cs, at, ats):
+        self.collection_id = None
+        super().__init__(ck, cs, at, ats)
 
     def on_status(self, status):
         #print('##STATUS')
-        #if(status.place != None or status.geo != None):
-        global collection_id
-        storage.save(status, collection_id)
+        storage.save(status, self.collection_id)
         loc = status.user.location
         if(loc is not None):
             print("location: "+loc)
-            if(storage.getGeocoded(loc) is None):
+            if(use_geocoding and storage.getGeocoded(loc) is None):
                 print("geocoding: ")
                 try:
                     geocode_result = gmaps.geocode(loc)
@@ -52,8 +61,8 @@ class MyStream(tweepy.Stream):
     def on_connection_error(self):
         print("error: connection err")
 
-    def on_request_error(self):
-        print("error: request err")
+    def on_request_error(self, status_code):
+        print("error: request err - code "+status_code)
 
     def on_error(self, status_code):
         print("error::"+status_code)
@@ -72,9 +81,10 @@ def main():
 
     # Begin collecting data
     print("call filter")
+    my_stream.collection_id = storage.createCollection(keywords_to_track);
+    print("tweet collection id %d" % my_stream.collection_id)
     global collection_id
-    collection_id = storage.createCollection(keywords_to_track);
-    print("tweet collection id %d" % collection_id)
+    collection_id = my_stream.collection_id
     my_stream.filter(track = keywords_to_track)
     print("after filter")
 
@@ -86,6 +96,7 @@ if __name__=='__main__':
         main()
     except KeyboardInterrupt:
         print("kbd interrupt")
+        global collection_id
         storage.finishCollection(collection_id)
         print("finished collection id %d" % collection_id)
     except SystemExit:
