@@ -2,18 +2,18 @@
 
 CREATE TABLE IF NOT EXISTS public.country
 (
-    id integer NOT NULL DEFAULT nextval('country_id_seq'::regclass),
+    id serial,
     name character varying(80) COLLATE pg_catalog."default",
     code character(6) COLLATE pg_catalog."default",
     CONSTRAINT country_pkey PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS public.geocoded
 (
     location_name character varying(255) COLLATE pg_catalog."default" NOT NULL,
     raw_geo_data json,
     CONSTRAINT pk_location PRIMARY KEY (location_name)
-)
+);
 
 CREATE TABLE IF NOT EXISTS public.place
 (
@@ -31,11 +31,20 @@ CREATE TABLE IF NOT EXISTS public.place
         REFERENCES public.country (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-)
+);
+
+CREATE TABLE IF NOT EXISTS public.tweet_collection
+(
+    id serial,
+    started timestamp with time zone,
+    finished timestamp with time zone,
+    keywords character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT pk_tweet_collection_id PRIMARY KEY (id)
+);
 
 CREATE TABLE IF NOT EXISTS public.tweet
 (
-    id integer NOT NULL DEFAULT nextval('tweet_id_seq'::regclass),
+    id serial,
     text character varying(1000) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
     created_at timestamp with time zone,
     coordinates character varying(255) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
@@ -57,13 +66,7 @@ CREATE TABLE IF NOT EXISTS public.tweet
         REFERENCES public.place (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-)
+);
 
-CREATE TABLE IF NOT EXISTS public.tweet_collection
-(
-    id integer NOT NULL DEFAULT nextval('tweet_collection_id_seq'::regclass),
-    started timestamp with time zone,
-    finished timestamp with time zone,
-    keywords character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT pk_tweet_collection_id PRIMARY KEY (id)
-)
+GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO pesquisa;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO pesquisa;
