@@ -50,6 +50,8 @@ CREATE TABLE IF NOT EXISTS public.tweet
     coordinates character varying(255) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
     lang character varying(20) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
     retweeted boolean,
+    is_quote boolean,
+    is_reply boolean,
     place_id character varying(80) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
     user_id bigint,
     user_geo_enabled boolean,

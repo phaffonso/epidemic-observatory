@@ -46,7 +46,7 @@ def getUngeocodedLocations():
         'left outer join geocoded g on t.user_location = g.location_name '
         'where t.user_location is not null '
         'and g.location_name is null '
-        'limit 100')
+        'limit 1000')
     mycursor.execute(sql)
     return mycursor.fetchall()
 
@@ -86,11 +86,12 @@ def save(tweet, collection_id):
             createPlace(tweet.place)
 
     sql = (
-        "INSERT INTO tweet (text, created_at, lang, retweeted, "
+        "INSERT INTO tweet (text, created_at, lang, retweeted, is_quote, is_reply, "
         " user_id, user_lang, user_geo_enabled, user_location, coordinates, place_id, collection_id)"
-        " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     )
-    val = (tweet.text, tweet.created_at, tweet.lang, tweet.retweeted,
+    val = (tweet.text, tweet.created_at, tweet.lang, tweet.retweeted, tweet.is_quote_status,
+            False if (tweet.in_reply_to_status_id is None) else True,
             tweet.user.id, tweet.user.lang, tweet.user.geo_enabled, tweet.user.location,
             None if tweet.coordinates is None else str(tweet.coordinates),
             place_id, collection_id)

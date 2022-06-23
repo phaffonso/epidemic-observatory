@@ -7,7 +7,7 @@ gmaps = googlemaps.Client(key=credentials_geo.API_KEY)
 
 # geocode_result = gmaps.geocode('Mountain View, CA')
 # print(geocode_result)
-print(storage.getUngeocodedLocations())
+# print(storage.getUngeocodedLocations())
 
 for loc in storage.getUngeocodedLocations():
     if(storage.getGeocoded(loc) is None):

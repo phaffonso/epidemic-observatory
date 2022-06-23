@@ -32,7 +32,6 @@ class MyStream(tweepy.Stream):
     def on_status(self, status):
         #print('##STATUS')
         storage.save(status, self.collection_id)
-        print("reply to", status.in_reply_to_status_id, " is quote ", status.is_quote_status)
         loc = status.user.location
         if(loc is not None):
             print("location: "+loc)
