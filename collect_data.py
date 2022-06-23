@@ -17,10 +17,11 @@ gmaps = googlemaps.Client(key=credentials_geo.API_KEY)
 ########### PARÂMETROS AJUSTÁVEIS ############
 # Palavras-chave de interesse na rede social
 # keywords_to_track = ['febre, tosse, gripe']
-keywords_to_track = ['febre, fever, fieber, fièvre, fiebre, حُمى, 发烧, 發燒, 熱, बुखार, netsu']
+keywords_to_track = ['febre, fever, fieber, fièvre, fiebre, حُمى, 发烧, 發燒, 熱, बुखार, netsu, demam, koorts, 열, yeol, ไข้, K̄hị']
+# pt, en, de, fr, es, ar, jp, chn, hindi, indonesio, holandes, ko2, turco2
 # Fazer ou não geocoding da localização de usuários - consome créditos do google maps API
 # cujo custo pode varias entre 100-1000 reais por dia (alguns centavos por chamada)
-use_geocoding = True
+use_geocoding = False
 
 class MyStream(tweepy.Stream):
 
@@ -31,6 +32,7 @@ class MyStream(tweepy.Stream):
     def on_status(self, status):
         #print('##STATUS')
         storage.save(status, self.collection_id)
+        print("reply to", status.in_reply_to_status_id, " is quote ", status.is_quote_status)
         loc = status.user.location
         if(loc is not None):
             print("location: "+loc)
