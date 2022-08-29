@@ -53,13 +53,13 @@ def saveGeocoded2(name, data, country, state):
     mydb.commit()
 
 def getUngeocodedLocations():
-    sql = ('select t.user_location, count(t.user_location) as ct from tweet t '
+    sql = ('select t.user_location from tweet t '
             'left outer join geocoded g on t.user_location = g.location_name '
             'where t.user_location is not null '
             'and g.location_name is null '
             'group by t.user_location '
-            'order by ct desc'
-            'limit 100')
+            'order by count(t.user_location) desc '
+            'limit 20000')
     mycursor.execute(sql)
     return mycursor.fetchall()
 
