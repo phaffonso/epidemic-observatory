@@ -4,6 +4,12 @@ left outer join geocoded g on t.user_location = g.location_name
 where t.user_location is not null
 and g.location_name is null
 
+-- Number of (successfully) Geocoded Tweets
+select count(t.user_location) from tweet t
+inner join geocoded g on t.user_location = g.location_name
+where t.user_location is not null
+and g.raw_geo_data::text != '[]'
+
 -- Ungeocoded locations ordered by frequency
 select t.user_location, count(t.user_location) as ct from tweet t
 left outer join geocoded g on t.user_location = g.location_name
