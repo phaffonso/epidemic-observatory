@@ -35,9 +35,20 @@ def getGeocoded(name):
     mycursor.execute(sql, param)
     return mycursor.fetchone()
 
+def getAllGeocoded():
+    sql = "select location_name, raw_geo_data from geocoded where raw_geo_data::text != '[]'"
+    mycursor.execute(sql)
+    return mycursor.fetchall()
+
 def saveGeocoded(name, data):
     sql = 'insert into geocoded(location_name, raw_geo_data) values (%s, %s)'
     val = (name, json.dumps(data))
+    mycursor.execute(sql, val)
+    mydb.commit()
+
+def saveGeocoded2(name, data, country, state):
+    sql = 'insert into geocoded(location_name, raw_geo_data, country, state) values (%s, %s, %s, %s)'
+    val = (name, json.dumps(data), country, state)
     mycursor.execute(sql, val)
     mydb.commit()
 
